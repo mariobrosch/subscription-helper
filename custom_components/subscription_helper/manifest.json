@@ -8,6 +8,5 @@
   "integration_type": "helper",
   "iot_class": "calculated",
   "requirements": [],
-  "version": "1.0.0",
-  "icon": "mdi:calendar-clock"
+  "version": "1.0.0"
 }
