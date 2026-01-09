@@ -1,0 +1,42 @@
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: Integration does not register custom actions.
+  appropriate-polling: done
+  brands:
+    status: exempt
+    comment: Helper integration does not require branding.
+  common-modules:
+    status: exempt
+    comment: Simple integration without need for common modules.
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency: done
+  docs-actions:
+    status: exempt
+    comment: Integration does not register custom actions.
+  docs-high-level-description:
+    status: exempt
+    comment: Documentation not required for custom integration.
+  docs-installation-instructions:
+    status: exempt
+    comment: Documentation not required for custom integration.
+  docs-removal-instructions:
+    status: exempt
+    comment: Documentation not required for custom integration.
+  entity-event-setup: done
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data:
+    status: exempt
+    comment: Integration does not store runtime data.
+  test-before-configure:
+    status: exempt
+    comment: No external connections to test.
+  test-before-setup:
+    status: exempt
+    comment: No external connections to test.
+  unique-config-entry:
+    status: exempt
+    comment: Users can have multiple subscriptions with the same name (e.g., multiple Netflix accounts).

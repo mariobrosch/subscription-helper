@@ -1,0 +1,64 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "account_number": "Accountnummer (optioneel)",
+                    "cancellation_period": "Opzegtermijn (optioneel)",
+                    "contract_length": "Contractduur (optioneel)",
+                    "cost": "Maandelijkse kosten (optioneel)",
+                    "end_date": "Einddatum (optioneel)",
+                    "renewal_period": "Verlengingsperiode",
+                    "provider": "Aanbieder (optioneel)",
+                    "subscription_name": "Abonnementsnaam"
+                },
+                "data_description": {
+                    "account_number": "Contract- of accountnummer ter referentie",
+                    "cancellation_period": "Hoeveel dagen van tevoren moet je opzeggen (standaard: 30 dagen)",
+                    "contract_length": "Duur van het contract in maanden (bijv. 12, 24)",
+                    "cost": "De maandelijkse kosten van dit abonnement",
+                    "end_date": "Wanneer loopt dit abonnement af of wordt het verlengd?",
+                    "notes": "Extra notities of informatie over dit abonnement",
+                    "payment_method": "Hoe betaal je (bijv. Creditcard, Automatische incasso, PayPal)",
+                    "provider": "Het bedrijf dat de dienst levert (bijv. Netflix, KPN, Ziggo)",
+                    "renewal_period": "Wordt dit abonnement automatisch verlengd?",
+                    "subscription_name": "De naam van je abonnement (bijv. Netflix, Spotify)"
+                },
+                "description": "Voeg een nieuw abonnement toe om te volgen"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "days_remaining": {
+                "name": "Resterende dagen"
+            },
+            "status": {
+                "name": "Status",
+                "state": {
+                    "active": "Actief",
+                    "expired": "Verlopen",
+                    "expiring_soon": "Loopt binnenkort af"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "account_number": "Accountnummer (optioneel)",
+                    "cancellation_period": "Opzegtermijn (optioneel)",
+                    "contract_length": "Contractduur (optioneel)",
+                    "cost": "Maandelijkse kosten (optioneel)",
+                    "end_date": "Einddatum (optioneel)",
+                    "notes": "Notities (optioneel)",
+                    "payment_method": "Betaalmethode (optioneel)",
+                    "provider": "Aanbieder (optioneel)",
+                    "renewal_period": "Verlengingsperiode"
+                },
+                "description": "Abonnementsgegevens bijwerken"
+            }
+        }
+    }
+}
