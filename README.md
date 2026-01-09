@@ -23,7 +23,7 @@ A helpful Home Assistant integration to manage and track all your subscriptions 
 2. Go to "Integrations"
 3. Click the three dots in the top right
 4. Select "Custom repositories"
-5. Add this repository: `https://github.com/YOUR_USERNAME/subscription-helper`
+5. Add this repository: `https://github.com/mariobrosch/subscription-helper`
 6. Select category "Integration"
 7. Click "Add"
 8. Search for "Subscription Helper"
@@ -65,6 +65,7 @@ Two sensors are created for each subscription:
 ### Attributes
 
 The status sensor contains all extra information as attributes:
+
 - `end_date`
 - `cost`
 - `renewal_period`
@@ -78,6 +79,7 @@ The status sensor contains all extra information as attributes:
 ### Automation Examples
 
 **Notification 7 days before expiration:**
+
 ```yaml
 automation:
   - alias: "Subscription expiring soon"
@@ -92,6 +94,7 @@ automation:
 ```
 
 **Dashboard card:**
+
 ```yaml
 type: entities
 title: My Subscriptions
@@ -104,12 +107,13 @@ entities:
 ```
 
 **Overview dashboard with template:**
+
 ```yaml
 type: markdown
 content: |
   ## Expiring Soon
-  {% for state in states.sensor 
-     if state.entity_id.endswith('_status') 
+  {% for state in states.sensor
+     if state.entity_id.endswith('_status')
      and state.state == 'expiring_soon' %}
   - **{{ state.name }}**: {{ state.attributes.days_remaining }} days
   {% endfor %}
