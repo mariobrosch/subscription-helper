@@ -1,15 +1,13 @@
 {
   "domain": "subscription_helper",
   "name": "Subscription Helper",
-  "codeowners": [
-    "@mariobrosch"
-  ],
+  "codeowners": ["@mariobrosch"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://www.home-assistant.io/integrations/subscription_helper",
+  "documentation": "https://github.com/mariobrosch/subscription-helper",
   "integration_type": "helper",
   "iot_class": "calculated",
-  "quality_scale": "bronze",
   "requirements": [],
+  "version": "1.0.0",
   "icon": "mdi:calendar-clock"
 }
