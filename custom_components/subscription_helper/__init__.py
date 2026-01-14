@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from datetime import date
 import logging
-from typing import Any
 
 import voluptuous as vol
 
@@ -12,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ServiceValidationError
+from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.config_validation as cv
 
 from .const import DOMAIN
@@ -22,7 +22,8 @@ PLATFORMS = [Platform.SENSOR]
 
 SERVICE_UPDATE_OPTIONS = "update_options"
 SERVICE_UPDATE_OPTIONS_SCHEMA = vol.Schema({
-    vol.Required("config_entry_id"): cv.string,
+    vol.Optional("config_entry_id"): cv.string,
+    vol.Optional("entity_id"): cv.entity_id,
     vol.Optional("end_date"): cv.date,
     vol.Optional("cost"): vol.Coerce(float),
     vol.Optional("renewal_period"): vol.In(["none", "monthly", "yearly"]),
@@ -43,7 +44,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register service
     async def handle_update_options(call: ServiceCall) -> None:
         """Handle the update_options service call."""
-        config_entry_id = call.data["config_entry_id"]
+        # Get config_entry_id from either direct parameter or from entity_id
+        if "config_entry_id" in call.data:
+            config_entry_id = call.data["config_entry_id"]
+        elif "entity_id" in call.data:
+            # Get config_entry_id from entity registry
+            entity_id = call.data["entity_id"]
+            entity_reg = er.async_get(hass)
+            if not (entity_entry := entity_reg.async_get(entity_id)):
+                raise ServiceValidationError(f"Entity {entity_id} not found")
+            
+            if not entity_entry.config_entry_id:
+                raise ServiceValidationError(f"Entity {entity_id} has no config entry")
+            
+            config_entry_id = entity_entry.config_entry_id
+        else:
+            raise ServiceValidationError("Either config_entry_id or entity_id must be provided")
         
         # Get the config entry
         if not (config_entry := hass.config_entries.async_get_entry(config_entry_id)):

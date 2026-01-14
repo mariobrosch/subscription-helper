@@ -1,14 +1,20 @@
 update_options:
   name: Update subscription options
-  description: Update the options of a subscription helper (e.g., end date for auto-renewal)
+  description: Update the options of a subscription helper (e.g., end date for auto-renewal). Provide either config_entry_id OR entity_id.
   fields:
     config_entry_id:
       name: Config Entry ID
       description: The config entry ID of the subscription helper to update
-      required: true
       example: "01234567890abcdef01234567890abcd"
       selector:
         text:
+    entity_id:
+      name: Entity ID
+      description: The entity ID of any sensor from the subscription (e.g., status or days_remaining sensor)
+      example: "sensor.netflix_status"
+      selector:
+        entity:
+          domain: sensor
     end_date:
       name: End date
       description: New end date for the subscription
