@@ -76,6 +76,56 @@ The status sensor contains all extra information as attributes:
 - `account_number`
 - `notes`
 
+
+## Services
+
+### `subscription_helper.update_options`
+
+Updates the configuration of an existing subscription. Useful for automations that automatically extend renewal dates or update other fields.
+
+**Parameters:**
+
+You can identify the subscription using **either** parameter:
+- `entity_id` (recommended): The entity ID of any sensor belonging to the subscription (e.g., `sensor.netflix_status`)
+- `config_entry_id`: The config entry ID (advanced usage)
+
+**Updatable fields** (all optional - only include what you want to change):
+- `subscription_name`: Change the subscription name
+- `cost`: Update monthly cost
+- `end_date`: Set a new end date (format: `YYYY-MM-DD`)
+- `renewal_period`: Change renewal period (`none`, `monthly`, or `yearly`)
+- `provider`: Update provider name
+- `cancellation_period`: Change cancellation period in days
+- `payment_method`: Update payment method
+- `account_number`: Change account/contract number
+- `notes`: Update notes
+
+**Example usage:**
+
+```yaml
+# Simple: Update only the end date
+action: subscription_helper.update_options
+data:
+  entity_id: sensor.netflix_status
+  end_date: "2026-12-31"
+
+# Advanced: Update multiple fields at once
+action: subscription_helper.update_options
+data:
+  entity_id: sensor.spotify_status
+  cost: 12.99
+  end_date: "2027-01-15"
+  payment_method: "Credit Card"
+```
+
+**Developer Tools testing:**
+
+You can test the service in **Developer Tools > Actions**:
+1. Search for `subscription_helper.update_options`
+2. Fill in the entity_id and field(s) you want to update
+3. Click "Perform action"
+
+
 ## Subscription types
 
 I intentionally did not create any subscription types (streaming, insurence, contracts, etc.), because they will change over time and are never suitable for anyones needs. Use the labels of Home Assistant too add categories or group the same types.
