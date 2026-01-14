@@ -88,6 +88,8 @@ When adding your subscription for streaming services create a new label in home 
 
 ### Automation Examples
 
+### Automation Examples
+
 **Auto-renew subscription after expiration:**
 
 This automation automatically extends the end date when a subscription expires and has a renewal period set. If you don't want automatic renewal, set the renewal period to "None" when configuring the subscription.
@@ -108,9 +110,8 @@ automation:
           {{ state_attr(trigger.entity_id, 'renewal_period') != 'none' }}
     action:
       - service: subscription_helper.update_options
-        target:
-          entity_id: "{{ trigger.entity_id }}"
         data:
+          entity_id: "{{ trigger.entity_id }}"
           end_date: >
             {% set current_end = state_attr(trigger.entity_id, 'end_date') %}
             {% set renewal = state_attr(trigger.entity_id, 'renewal_period') %}
@@ -128,6 +129,48 @@ automation:
 
 **Auto-renew subscriptions based on label (recommended):**
 
+Instead of listing all entities individually, you can use a label to group subscriptions. This makes it easier to manage multiple subscriptions.
+
+First, create a label in Home Assistant (e.g., "subscription_auto_renew") and add it to the subscription helper config entries you want to auto-renew.
+
+```yaml
+automation:
+  - alias: "Auto-renew labeled subscriptions"
+    trigger:
+      - platform: state
+        entity_id: sensor.time  # Or use a time pattern trigger
+    condition:
+      - condition: template
+        value_template: >
+          {{ expand(label_entities('subscription_auto_renew'))
+             | selectattr('attributes.status', 'eq', 'expired')
+             | selectattr('attributes.renewal_period', 'ne', 'none')
+             | list | count > 0 }}
+    action:
+      - repeat:
+          for_each: >
+            {{ expand(label_entities('subscription_auto_renew'))
+               | selectattr('attributes.status', 'eq', 'expired')
+               | selectattr('attributes.renewal_period', 'ne', 'none')
+               | map(attribute='entity_id')
+               | list }}
+        sequence:
+          - service: subscription_helper.update_options
+            data:
+              entity_id: "{{ repeat.item }}"
+              end_date: >
+                {% set current_end = state_attr(repeat.item, 'end_date') %}
+                {% set renewal = state_attr(repeat.item, 'renewal_period') %}
+                {% if renewal == 'monthly' %}
+                  {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
+                {% elif renewal == 'yearly' %}
+                  {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
+                {% endif %}
+          - service: notify.mobile_app
+            data:
+              message: >
+                {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
+```
 This automation works for all subscriptions with a specific label. First, add a label (e.g., `subscription_auto_renew`) to the subscriptions you want to auto-renew.
 
 ```yaml
