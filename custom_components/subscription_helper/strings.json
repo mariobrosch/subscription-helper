@@ -33,14 +33,14 @@
       "init": {
         "description": "Update subscription details",
         "data": {
-          "cost": "[%key:component::subscription_helper::config::step::user::data::cost%]",
-          "end_date": "[%key:component::subscription_helper::config::step::user::data::end_date%]",
-          "renewal_period": "[%key:component::subscription_helper::config::step::user::data::renewal_period%]",
-          "provider": "[%key:component::subscription_helper::config::step::user::data::provider%]",
-          "cancellation_period": "[%key:component::subscription_helper::config::step::user::data::cancellation_period%]",
-          "payment_method": "[%key:component::subscription_helper::config::step::user::data::payment_method%]",
-          "account_number": "[%key:component::subscription_helper::config::step::user::data::account_number%]",
-          "notes": "[%key:component::subscription_helper::config::step::user::data::notes%]"
+          "cost": "Monthly cost (optional)",
+          "end_date": "End date (optional)",
+          "renewal_period": "Renewal period",
+          "provider": "Provider (optional)",
+          "cancellation_period": "Cancellation period (optional)",
+          "payment_method": "Payment method (optional)",
+          "account_number": "Account number (optional)",
+          "notes": "Notes (optional)"
         }
       }
     }
