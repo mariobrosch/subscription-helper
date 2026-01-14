@@ -1,0 +1,73 @@
+update_options:
+  name: Update subscription options
+  description: Update the options of a subscription helper (e.g., end date for auto-renewal)
+  fields:
+    config_entry_id:
+      name: Config Entry ID
+      description: The config entry ID of the subscription helper to update
+      required: true
+      example: "01234567890abcdef01234567890abcd"
+      selector:
+        text:
+    end_date:
+      name: End date
+      description: New end date for the subscription
+      selector:
+        date:
+    cost:
+      name: Monthly cost
+      description: Monthly cost of the subscription
+      selector:
+        number:
+          min: 0
+          step: 0.01
+          mode: box
+    renewal_period:
+      name: Renewal period
+      description: How often the subscription renews
+      selector:
+        select:
+          options:
+            - label: "None"
+              value: "none"
+            - label: "Monthly"
+              value: "monthly"
+            - label: "Yearly"
+              value: "yearly"
+    provider:
+      name: Provider
+      description: Service provider name
+      selector:
+        text:
+    cancellation_period:
+      name: Cancellation period
+      description: Days notice needed to cancel
+      selector:
+        number:
+          min: 0
+          step: 1
+          mode: box
+    contract_length:
+      name: Contract length
+      description: Contract length in months
+      selector:
+        number:
+          min: 1
+          step: 1
+          mode: box
+    payment_method:
+      name: Payment method
+      description: How you pay for this subscription
+      selector:
+        text:
+    account_number:
+      name: Account number
+      description: Account or contract number
+      selector:
+        text:
+    notes:
+      name: Notes
+      description: Additional notes
+      selector:
+        text:
+          multiline: true
