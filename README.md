@@ -14,7 +14,7 @@ For many contracts or subscription auto renewal is done, so this can also being 
 - 🔄 **Auto-renewal support**: Support for monthly/yearly renewal
 - 🔔 **Status sensor**: "Active", "Expiring soon" (7 days), "Expired"
 - 📊 **Days remaining sensor**: Exact countdown to end date
-- 📝 **Extra fields**: Provider, cancellation period, contract length, payment method, account number, notes
+- 📝 **Extra fields**: Provider, cancellation period, payment method, account number, notes
 - 🌍 **Multi-language**: Fully translated to Dutch and English
 
 ## Installation
@@ -50,7 +50,6 @@ For many contracts or subscription auto renewal is done, so this can also being 
    - **Renewal period**: None, Monthly, or Yearly
    - **Provider** (optional): Company providing the service
    - **Cancellation period** (optional): Days notice needed to cancel
-   - **Contract length** (optional): Duration in months (12, 24, etc.)
    - **Payment method** (optional): How you pay
    - **Account number** (optional): Contract or account number
    - **Notes** (optional): Additional information
@@ -73,7 +72,6 @@ The status sensor contains all extra information as attributes:
 - `renewal_period`
 - `provider`
 - `cancellation_period`
-- `contract_length`
 - `payment_method`
 - `account_number`
 - `notes`
