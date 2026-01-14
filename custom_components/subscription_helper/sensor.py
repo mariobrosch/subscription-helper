@@ -54,7 +54,6 @@ class SubscriptionDaysSensor(SensorEntity):
         """Initialize Subscription Days Sensor."""
         self._config_entry = config_entry
         self._attr_unique_id = f"{unique_id}_days"
-        self._attr_name = None  # Use translation_key for name
         self._attr_device_info = {
             "identifiers": {(DOMAIN, config_entry.entry_id)},
             "name": name,
@@ -110,7 +109,6 @@ class SubscriptionStatusSensor(SensorEntity):
         """Initialize Subscription Status Sensor."""
         self._config_entry = config_entry
         self._attr_unique_id = unique_id
-        self._attr_name = None  # Use translation_key for name
         self._attr_device_info = {
             "identifiers": {(DOMAIN, config_entry.entry_id)},
             "name": name,
