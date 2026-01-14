@@ -17,7 +17,6 @@ from homeassistant.helpers.schema_config_entry_flow import (
 from .const import (
     CONF_ACCOUNT_NUMBER,
     CONF_CANCELLATION_PERIOD,
-    CONF_CONTRACT_LENGTH,
     CONF_COST,
     CONF_END_DATE,
     CONF_NOTES,
@@ -62,13 +61,6 @@ OPTIONS_SCHEMA = vol.Schema(
             selector.NumberSelectorConfig(
                 min=0,
                 max=365,
-                mode=selector.NumberSelectorMode.BOX,
-            )
-        ),
-        vol.Optional(CONF_CONTRACT_LENGTH): selector.NumberSelector(
-            selector.NumberSelectorConfig(
-                min=1,
-                max=120,
                 mode=selector.NumberSelectorMode.BOX,
             )
         ),
