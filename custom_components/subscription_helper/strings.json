@@ -10,7 +10,6 @@
           "renewal_period": "Renewal period",
           "provider": "Provider (optional)",
           "cancellation_period": "Cancellation period (optional)",
-          "contract_length": "Contract length (optional)",
           "payment_method": "Payment method (optional)",
           "account_number": "Account number (optional)",
           "notes": "Notes (optional)"
@@ -22,7 +21,6 @@
           "renewal_period": "Does this subscription automatically renew?",
           "provider": "The company providing the service (e.g., Netflix, KPN, Ziggo)",
           "cancellation_period": "How many days notice needed to cancel (default: 30 days)",
-          "contract_length": "Length of the contract in months (e.g., 12, 24)",
           "payment_method": "How you pay (e.g., Credit Card, Direct Debit, PayPal)",
           "account_number": "Contract or account number for reference",
           "notes": "Additional notes or information about this subscription"
@@ -40,7 +38,6 @@
           "renewal_period": "[%key:component::subscription_helper::config::step::user::data::renewal_period%]",
           "provider": "[%key:component::subscription_helper::config::step::user::data::provider%]",
           "cancellation_period": "[%key:component::subscription_helper::config::step::user::data::cancellation_period%]",
-          "contract_length": "[%key:component::subscription_helper::config::step::user::data::contract_length%]",
           "payment_method": "[%key:component::subscription_helper::config::step::user::data::payment_method%]",
           "account_number": "[%key:component::subscription_helper::config::step::user::data::account_number%]",
           "notes": "[%key:component::subscription_helper::config::step::user::data::notes%]"

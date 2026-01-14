@@ -13,7 +13,6 @@ from homeassistant.helpers.event import async_track_time_interval
 from .const import (
     CONF_ACCOUNT_NUMBER,
     CONF_CANCELLATION_PERIOD,
-    CONF_CONTRACT_LENGTH,
     CONF_COST,
     CONF_END_DATE,
     CONF_NOTES,
@@ -151,9 +150,6 @@ class SubscriptionStatusSensor(SensorEntity):
             CONF_CANCELLATION_PERIOD,
             self._config_entry.data.get(CONF_CANCELLATION_PERIOD),
         )
-        contract_length = self._config_entry.options.get(
-            CONF_CONTRACT_LENGTH, self._config_entry.data.get(CONF_CONTRACT_LENGTH)
-        )
         payment_method = self._config_entry.options.get(
             CONF_PAYMENT_METHOD, self._config_entry.data.get(CONF_PAYMENT_METHOD)
         )
@@ -177,8 +173,6 @@ class SubscriptionStatusSensor(SensorEntity):
             self._attr_extra_state_attributes["cancellation_period"] = (
                 cancellation_period
             )
-        if contract_length is not None:
-            self._attr_extra_state_attributes["contract_length"] = contract_length
         if payment_method:
             self._attr_extra_state_attributes["payment_method"] = payment_method
         if account_number:

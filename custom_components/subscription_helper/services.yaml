@@ -53,14 +53,6 @@ update_options:
           min: 0
           step: 1
           mode: box
-    contract_length:
-      name: Contract length
-      description: Contract length in months
-      selector:
-        number:
-          min: 1
-          step: 1
-          mode: box
     payment_method:
       name: Payment method
       description: How you pay for this subscription

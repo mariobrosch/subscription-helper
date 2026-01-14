@@ -29,7 +29,6 @@ SERVICE_UPDATE_OPTIONS_SCHEMA = vol.Schema({
     vol.Optional("renewal_period"): vol.In(["none", "monthly", "yearly"]),
     vol.Optional("provider"): cv.string,
     vol.Optional("cancellation_period"): vol.Coerce(int),
-    vol.Optional("contract_length"): vol.Coerce(int),
     vol.Optional("payment_method"): cv.string,
     vol.Optional("account_number"): cv.string,
     vol.Optional("notes"): cv.string,
@@ -72,8 +71,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         new_options = dict(config_entry.options)
         
         # Update with provided values
-        for key in ["end_date", "cost", "renewal_period", "provider", "cancellation_period", 
-                    "contract_length", "payment_method", "account_number", "notes"]:
+        for key in ["end_date", "cost", "renewal_period", "provider", "cancellation_period",
+                    "payment_method", "account_number", "notes"]:
             if key in call.data:
                 value = call.data[key]
                 # Convert date to string
