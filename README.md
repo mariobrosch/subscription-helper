@@ -52,7 +52,7 @@ For many contracts or subscription auto renewal is done, so this can also being 
    - **Cancellation period** (optional): Days notice needed to cancel
    - **Payment method** (optional): How you pay
    - **Account number** (optional): Contract or account number
-   - **Notes** (optional): Additional information
+   - **Notes** (optional): Additional information (multiline support)
 
 ## Usage
 

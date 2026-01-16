@@ -68,7 +68,9 @@ OPTIONS_SCHEMA = vol.Schema(
         vol.Optional(CONF_ACCOUNT_NUMBER): selector.TextSelector(),
         vol.Optional(CONF_NOTES): selector.TextSelector(
             selector.TextSelectorConfig(
+                type=selector.TextSelectorType.TEXT,
                 multiline=True,
+                multiple=False,
             )
         ),
     }
