@@ -167,6 +167,8 @@ automation:
               {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
             {% elif renewal == 'yearly' %}
               {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
+            {% else %}
+              {{ current_end }}
             {% endif %}
       - action: notify.mobile_app
         data:
@@ -181,15 +183,65 @@ automation:
 - ✅ Test by changing sensor state: Developer Tools > States > set to `active`, then to `expired`
 - ✅ Make sure the subscription has a renewal period (not "None") or the condition will block the automation
 
-**Auto-renew subscriptions based on label (time-based):**
+**Advanced: Conditional notifications with labels:**
 
-Instead of listing all entities individually, you can use a label to group subscriptions. This makes it easier to manage multiple subscriptions.
+You can add conditional notifications based on labels. For example, only send notifications for subscriptions with a specific label:
+
+```yaml
+automation:
+  - alias: "Auto-renew expired subscriptions with optional notifications"
+    triggers:
+      - entity_id:
+          - sensor.netflix_status
+          - sensor.spotify_status
+          # Add all your subscription status sensors here
+        to: expired
+        trigger: state
+    conditions:
+      - condition: template
+        value_template: >
+          {{ state_attr(trigger.to_state.entity_id, 'renewal_period') != 'none' }}
+    actions:
+      - action: subscription_helper.update_options
+        data:
+          entity_id: "{{ trigger.to_state.entity_id }}"
+          end_date: >
+            {% set entity = trigger.to_state.entity_id %}
+            {% set current_end = state_attr(entity, 'end_date') %}
+            {% set renewal = state_attr(entity, 'renewal_period') %}
+            {% if renewal == 'monthly' %}
+              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
+            {% elif renewal == 'yearly' %}
+              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
+            {% else %}
+              {{ current_end }}
+            {% endif %}
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: >
+                  {{ 'notify_on_renewal' in labels(trigger.to_state.entity_id) }}
+            sequence:
+              - action: notify.mobile_app
+                data:
+                  title: "Subscription renewed"
+                  message: >
+                    {{ trigger.to_state.attributes.friendly_name }} has been automatically renewed.
+                    New end date: {{ state_attr(trigger.to_state.entity_id, 'end_date') }}
+    mode: single
+```
+
+Create a label called `notify_on_renewal` and add it only to the subscriptions where you want to receive notifications when they auto-renew
+
+**Auto-renew subscriptions based on label (time-based check):**
+
+Instead of listing all entities individually, you can use a label to group subscriptions. This automation runs daily and checks for expired subscriptions.
 
 First, create a label in Home Assistant (e.g., "subscription_auto_renew") and add it to the subscription helper config entries you want to auto-renew.
 
 ```yaml
 automation:
-  - alias: "Auto-renew labeled subscriptions"
+  - alias: "Auto-renew labeled subscriptions (daily check)"
     triggers:
       - at: "00:00:00"
         trigger: time
@@ -214,131 +266,25 @@ automation:
                     {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
                   {% elif renewal == 'yearly' %}
                     {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
+                  {% else %}
+                    {{ current_end }}
                   {% endif %}
-            - action: notify.mobile_app
-              data:
-                message: >
-                  {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
-                  New end date: {{ state_attr(repeat.item, 'end_date') }}
+            - choose:
+                - conditions:
+                    - condition: template
+                      value_template: >
+                        {{ 'notify_on_renewal' in labels(repeat.item) }}
+                  sequence:
+                    - action: notify.mobile_app
+                      data:
+                        title: "Subscription renewed"
+                        message: >
+                          {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
+                          New end date: {{ state_attr(repeat.item, 'end_date') }}
+    mode: single
 ```
 
-### Automation Examples
-
-**Auto-renew subscription after expiration:**
-
-This automation automatically extends the end date when a subscription expires and has a renewal period set. If you don't want automatic renewal, set the renewal period to "None" when configuring the subscription.
-
-```yaml
-automation:
-  - alias: "Auto-renew expired subscriptions"
-    trigger:
-      - platform: state
-        entity_id:
-          - sensor.netflix_status
-          - sensor.spotify_status
-          # Add more subscription status sensors here
-        to: "expired"
-    condition:
-      - condition: template
-        value_template: >
-          {{ state_attr(trigger.entity_id, 'renewal_period') != 'none' }}
-    action:
-      - service: subscription_helper.update_options
-        data:
-          entity_id: "{{ trigger.entity_id }}"
-          end_date: >
-            {% set current_end = state_attr(trigger.entity_id, 'end_date') %}
-            {% set renewal = state_attr(trigger.entity_id, 'renewal_period') %}
-            {% if renewal == 'monthly' %}
-              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
-            {% elif renewal == 'yearly' %}
-              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
-            {% endif %}
-      - service: notify.mobile_app
-        data:
-          message: >
-            {{ trigger.to_state.name }} has been automatically renewed.
-            New end date: {{ state_attr(trigger.entity_id, 'end_date') }}
-```
-
-**Auto-renew subscriptions based on label (recommended):**
-
-Instead of listing all entities individually, you can use a label to group subscriptions. This makes it easier to manage multiple subscriptions.
-
-First, create a label in Home Assistant (e.g., "subscription_auto_renew") and add it to the subscription helper config entries you want to auto-renew.
-
-```yaml
-automation:
-  - alias: "Auto-renew labeled subscriptions"
-    trigger:
-      - platform: state
-        entity_id: sensor.time # Or use a time pattern trigger
-    condition:
-      - condition: template
-        value_template: >
-          {{ expand(label_entities('subscription_auto_renew'))
-             | selectattr('attributes.status', 'eq', 'expired')
-             | selectattr('attributes.renewal_period', 'ne', 'none')
-             | list | count > 0 }}
-    action:
-      - repeat:
-          for_each: >
-            {{ expand(label_entities('subscription_auto_renew'))
-               | selectattr('attributes.status', 'eq', 'expired')
-               | selectattr('attributes.renewal_period', 'ne', 'none')
-               | map(attribute='entity_id')
-               | list }}
-        sequence:
-          - service: subscription_helper.update_options
-            data:
-              entity_id: "{{ repeat.item }}"
-              end_date: >
-                {% set current_end = state_attr(repeat.item, 'end_date') %}
-                {% set renewal = state_attr(repeat.item, 'renewal_period') %}
-                {% if renewal == 'monthly' %}
-                  {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
-                {% elif renewal == 'yearly' %}
-                  {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
-                {% endif %}
-          - service: notify.mobile_app
-            data:
-              message: >
-                {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
-```
-
-This automation works for all subscriptions with a specific label. First, add a label (e.g., `subscription_auto_renew`) to the subscriptions you want to auto-renew.
-
-```yaml
-automation:
-  - alias: "Auto-renew labeled subscriptions"
-    trigger:
-      - platform: state
-        to: "expired"
-    condition:
-      - condition: template
-        value_template: >
-          {{ trigger.entity_id.endswith('_status')
-             and 'subscription_auto_renew' in state_attr(trigger.entity_id, 'labels') | default([])
-             and state_attr(trigger.entity_id, 'renewal_period') != 'none' }}
-    action:
-      - service: subscription_helper.update_options
-        target:
-          entity_id: "{{ trigger.entity_id }}"
-        data:
-          end_date: >
-            {% set current_end = state_attr(trigger.entity_id, 'end_date') %}
-            {% set renewal = state_attr(trigger.entity_id, 'renewal_period') %}
-            {% if renewal == 'monthly' %}
-              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=30)).strftime('%Y-%m-%d') }}
-            {% elif renewal == 'yearly' %}
-              {{ (strptime(current_end, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d') }}
-            {% endif %}
-      - service: notify.mobile_app
-        data:
-          message: >
-            {{ trigger.to_state.name }} has been automatically renewed.
-            New end date: {{ state_attr(trigger.entity_id, 'end_date') }}
-```
+**Note:** This time-based automation only checks once per day. For immediate renewal, use the state-trigger automation shown earlier
 
 **Notification 7 days before expiration:**
 
@@ -350,9 +296,9 @@ automation:
         entity_id: sensor.netflix_status
         to: "expiring_soon"
     action:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
-          message: "Your Netflix subscription expires in {{ state_attr('sensor.netflix_days_remaining', 'state') }} days!"
+          message: "Your Netflix subscription expires in {{ states('sensor.netflix_days_remaining') }} days!"
 ```
 
 **Dashboard card:**
