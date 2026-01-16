@@ -10,7 +10,7 @@ For many contracts or subscription auto renewal is done, so this can also being 
 
 - ✅ **Multiple subscriptions**: Add unlimited subscriptions
 - 📅 **End date tracking**: Keep track of when subscriptions expire
-- 💰 **Cost tracking**: Store monthly costs per subscription
+- 💰 **Cost tracking**: Store costs per period per subscription
 - 🔄 **Auto-renewal support**: Support for monthly/yearly renewal
 - 🔔 **Status sensor**: "Active", "Expiring soon" (7 days), "Expired"
 - 📊 **Days remaining sensor**: Exact countdown to end date
@@ -45,7 +45,7 @@ For many contracts or subscription auto renewal is done, so this can also being 
 3. Search for **Subscription Helper**
 4. Fill in the details:
    - **Subscription name**: Name of your subscription (e.g., Netflix, Spotify)
-   - **Monthly cost** (optional): Cost per month
+   - **Monthly cost** (optional): Cost per period
    - **End date** (optional): When does this subscription expire?
    - **Renewal period**: None, Monthly, or Yearly
    - **Provider** (optional): Company providing the service
@@ -76,7 +76,6 @@ The status sensor contains all extra information as attributes:
 - `account_number`
 - `notes`
 
-
 ## Services
 
 ### `subscription_helper.update_options`
@@ -86,12 +85,14 @@ Updates the configuration of an existing subscription. Useful for automations th
 **Parameters:**
 
 You can identify the subscription using **either** parameter:
+
 - `entity_id` (recommended): The entity ID of any sensor belonging to the subscription (e.g., `sensor.netflix_status`)
 - `config_entry_id`: The config entry ID (advanced usage)
 
 **Updatable fields** (all optional - only include what you want to change):
+
 - `subscription_name`: Change the subscription name
-- `cost`: Update monthly cost
+- `cost`: Update cost per period
 - `end_date`: Set a new end date (format: `YYYY-MM-DD`)
 - `renewal_period`: Change renewal period (`none`, `monthly`, or `yearly`)
 - `provider`: Update provider name
@@ -121,10 +122,10 @@ data:
 **Developer Tools testing:**
 
 You can test the service in **Developer Tools > Actions**:
+
 1. Search for `subscription_helper.update_options`
 2. Fill in the entity_id and field(s) you want to update
 3. Click "Perform action"
-
 
 ## Subscription types
 
@@ -175,6 +176,7 @@ automation:
 ```
 
 **Important testing notes:**
+
 - ⚠️ Do NOT use "Run all actions" to test - it doesn't provide trigger context
 - ✅ Test by changing sensor state: Developer Tools > States > set to `active`, then to `expired`
 - ✅ Make sure the subscription has a renewal period (not "None") or the condition will block the automation
@@ -219,8 +221,6 @@ automation:
                   {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
                   New end date: {{ state_attr(repeat.item, 'end_date') }}
 ```
-
-
 
 ### Automation Examples
 
@@ -272,7 +272,7 @@ automation:
   - alias: "Auto-renew labeled subscriptions"
     trigger:
       - platform: state
-        entity_id: sensor.time  # Or use a time pattern trigger
+        entity_id: sensor.time # Or use a time pattern trigger
     condition:
       - condition: template
         value_template: >
@@ -305,6 +305,7 @@ automation:
               message: >
                 {{ state_attr(repeat.item, 'friendly_name') }} has been automatically renewed.
 ```
+
 This automation works for all subscriptions with a specific label. First, add a label (e.g., `subscription_auto_renew`) to the subscriptions you want to auto-renew.
 
 ```yaml
