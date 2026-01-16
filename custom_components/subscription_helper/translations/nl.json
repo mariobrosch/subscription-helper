@@ -5,7 +5,7 @@
         "description": "Voeg een nieuw abonnement toe om te volgen",
         "data": {
           "subscription_name": "Abonnementsnaam",
-          "cost": "Maandelijkse kosten (optioneel)",
+          "cost": "Kosten per periode (optioneel)",
           "end_date": "Einddatum (optioneel)",
           "renewal_period": "Verlengingsperiode",
           "provider": "Aanbieder (optioneel)",
@@ -16,7 +16,7 @@
         },
         "data_description": {
           "subscription_name": "De naam van je abonnement (bijv. Netflix, Spotify)",
-          "cost": "De maandelijkse kosten van dit abonnement",
+          "cost": "De kosten per periode van dit abonnement",
           "end_date": "Wanneer eindigt of verlengt dit abonnement?",
           "renewal_period": "Wordt dit abonnement automatisch verlengd?",
           "provider": "Het bedrijf dat de dienst levert (bijv. Netflix, KPN, Ziggo)",
@@ -33,7 +33,7 @@
       "init": {
         "description": "Werk abonnementsgegevens bij",
         "data": {
-          "cost": "[%key:component::subscription_helper::config::step::user::data::cost%]",
+          "cost": "Kosten per periode (optioneel)",
           "end_date": "[%key:component::subscription_helper::config::step::user::data::end_date%]",
           "renewal_period": "[%key:component::subscription_helper::config::step::user::data::renewal_period%]",
           "provider": "[%key:component::subscription_helper::config::step::user::data::provider%]",

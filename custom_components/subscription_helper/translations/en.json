@@ -5,7 +5,7 @@
         "description": "Add a new subscription to track",
         "data": {
           "subscription_name": "Subscription name",
-          "cost": "Monthly cost (optional)",
+          "cost": "Cost per period (optional)",
           "end_date": "End date (optional)",
           "renewal_period": "Renewal period",
           "provider": "Provider (optional)",
@@ -16,7 +16,7 @@
         },
         "data_description": {
           "subscription_name": "The name of your subscription (e.g., Netflix, Spotify)",
-          "cost": "The monthly cost of this subscription",
+          "cost": "The cost per period of this subscription",
           "end_date": "When does this subscription end or renew?",
           "renewal_period": "Does this subscription automatically renew?",
           "provider": "The company providing the service (e.g., Netflix, KPN, Ziggo)",
@@ -33,7 +33,7 @@
       "init": {
         "description": "Update subscription details",
         "data": {
-          "cost": "Monthly cost (optional)",
+          "cost": "Cost per period (optional)",
           "end_date": "End date (optional)",
           "renewal_period": "Renewal period",
           "provider": "Provider (optional)",
