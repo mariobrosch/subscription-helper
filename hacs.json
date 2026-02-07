@@ -1,5 +1,6 @@
 {
   "name": "Subscription Helper",
   "render_readme": true,
-  "country": "NL"
+  "country": "NL",
+  "homeassistant": "2023.1.0"
 }
